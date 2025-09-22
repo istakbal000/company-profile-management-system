@@ -96,13 +96,38 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 3000;
 const start = async () => {
 	try {
+		// Enhanced database connection debugging
+		console.log('🔄 Attempting database connection...');
+		console.log('🔄 NODE_ENV:', process.env.NODE_ENV);
+		console.log('🔄 DATABASE_URL exists:', !!process.env.DATABASE_URL);
+		console.log('🔄 PORT:', PORT);
+		
 		// Verify DB connectivity before starting the server
-		await pool.query('SELECT 1');
+		const result = await pool.query('SELECT 1 as connected, version() as pg_version');
+		console.log('✅ Database connection test result:', result.rows[0]);
 		logger.info('Database connection established');
+		
 		app.listen(PORT, () => {
 			logger.info(`Server started on port ${PORT}`);
+			console.log(`🚀 Server running on port ${PORT}`);
 		});
 	} catch (err) {
+		console.error('❌ Database connection failed with details:');
+		console.error('❌ Error code:', err.code);
+		console.error('❌ Error message:', err.message);
+		console.error('❌ Error stack:', err.stack);
+		
+		// Additional debugging for specific error types
+		if (err.code === 'ECONNREFUSED') {
+			console.error('🔍 ECONNREFUSED - Database server is not accessible');
+			console.error('🔍 Check your DATABASE_URL and ensure the database service is running');
+			console.error('🔍 Current DATABASE_URL format should be: postgresql://user:pass@host:port/db?sslmode=require');
+		} else if (err.code === '28P01') {
+			console.error('🔍 Authentication failed - Check username/password in DATABASE_URL');
+		} else if (err.code === '3D000') {
+			console.error('🔍 Database does not exist - Check database name in DATABASE_URL');
+		}
+		
 		logger.error('Failed to connect to the database:', err);
 		process.exit(1);
 	}
