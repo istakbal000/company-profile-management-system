@@ -6,6 +6,8 @@ const logger = require('../utils/logger');
 const createTables = async () => {
 	try {
 		console.log(' Running database migrations...');
+		console.log('Environment:', process.env.NODE_ENV || 'development');
+		console.log('Using DATABASE_URL:', !!process.env.DATABASE_URL);
 
 		// Create users table
 		await pool.query(`

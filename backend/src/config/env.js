@@ -3,9 +3,10 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
 const required = (key, fallback) => {
 	if (fallback !== undefined) return process.env[key] ?? fallback;
-	if (!process.env[key]) {
+	// In production, some variables might be provided via DATABASE_URL instead
+	if (!process.env[key] && !process.env.DATABASE_URL) {
 		console.error(`❌ CRITICAL: Missing required environment variable: ${key}`);
-		console.error(`Please add ${key} to your .env file`);
+		console.error(`Please add ${key} to your .env file or ensure DATABASE_URL is provided`);
 		throw new Error(`Missing env: ${key}`);
 	}
 	return process.env[key];
@@ -16,12 +17,12 @@ module.exports = {
 	PORT: process.env.PORT || 3000,
 
 	PG: {
-		HOST: required('PGHOST', 'localhost'),
-		PORT: parseInt(required('PGPORT', '5432'), 10),
-		USER: required('PGUSER', 'postgres'),
-		PASSWORD: required('PGPASSWORD', 'postgres'),
-		DATABASE: required('PGDATABASE', 'company_db'),
-		SSL: process.env.PGSSLMODE === 'require',
+		HOST: process.env.DATABASE_URL ? null : required('PGHOST', 'localhost'),
+		PORT: process.env.DATABASE_URL ? null : parseInt(required('PGPORT', '5432'), 10),
+		USER: process.env.DATABASE_URL ? null : required('PGUSER', 'postgres'),
+		PASSWORD: process.env.DATABASE_URL ? null : required('PGPASSWORD', 'postgres'),
+		DATABASE: process.env.DATABASE_URL ? null : required('PGDATABASE', 'company_db'),
+		SSL: process.env.PGSSLMODE === 'require' || process.env.NODE_ENV === 'production',
 	},
 
 	JWT_SECRET: required('JWT_SECRET', 'dev_secret_change_me'),
