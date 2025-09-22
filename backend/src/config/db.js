@@ -13,6 +13,7 @@ if (process.env.DATABASE_URL) {
 		},
 		max: 10,
 		idleTimeoutMillis: 30000,
+		connectionTimeoutMillis: 10000,
 	};
 } else {
 	// Use individual environment variables (local development fallback)
