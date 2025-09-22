@@ -22,15 +22,20 @@
       "dest": "/backend/vercel-app.js"
     },
     {
-      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot))",
-      "dest": "/frontend/dist/$1"
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|json|map))",
+      "dest": "/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/frontend/dist/index.html"
+      "dest": "/index.html"
     }
   ],
   "env": {
     "NODE_ENV": "production"
+  },
+  "functions": {
+    "backend/vercel-app.js": {
+      "maxDuration": 30
+    }
   }
 }

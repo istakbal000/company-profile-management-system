@@ -56,7 +56,8 @@ NODE_ENV=production
 1. **Push to GitHub**:
    ```bash
    git add .
-   git commit -m "Prepare for Vercel deployment"
+  # Run the deployment helper script
+.\deploy-vercel.ps1
    git push origin main
    ```
 
