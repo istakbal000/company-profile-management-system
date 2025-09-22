@@ -8,9 +8,32 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    chunkSizeWarningLimit: 2000,
     rollupOptions: {
       output: {
-        manualChunks: undefined,
+        manualChunks: (id) => {
+          // Create vendor chunk for node_modules
+          if (id.includes('node_modules')) {
+            // Split large UI libraries
+            if (id.includes('@mui/material') || id.includes('@emotion')) {
+              return 'mui-vendor';
+            }
+            if (id.includes('@mui/icons-material')) {
+              return 'mui-icons';
+            }
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'react-vendor';
+            }
+            if (id.includes('react-router')) {
+              return 'router-vendor';
+            }
+            if (id.includes('@reduxjs/toolkit') || id.includes('react-redux')) {
+              return 'redux-vendor';
+            }
+            // Other vendor libraries
+            return 'vendor';
+          }
+        },
       },
     },
   },

@@ -1,15 +1,17 @@
 # 🚀 Vercel 404 Error Fix Guide
 
-## What Causes 404 Errors on Vercel?
+## What Causes 404 Errors and Deployment Warnings?
 
 1. **Incorrect routing configuration** - SPA routes not properly handled
 2. **Build path issues** - Static files not found in correct directory
 3. **Missing environment variables** - Backend API not working
 4. **Build script errors** - Frontend not building correctly
+5. **Deprecated dependencies** - Causing build warnings and potential issues
+6. **Large bundle sizes** - Causing chunk size warnings
 
 ## ✅ Fixed Issues in Your Configuration
 
-I've updated your `vercel.json` and `vite.config.js` with the following fixes:
+I've updated your `vercel.json`, `vite.config.js`, and dependencies with the following fixes:
 
 ### 1. Fixed Static File Routing
 - Updated routes to serve static files from root instead of `/frontend/dist/`
@@ -19,9 +21,16 @@ I've updated your `vercel.json` and `vite.config.js` with the following fixes:
 ### 2. Enhanced Vite Configuration
 - Added explicit `base: '/'` for proper routing
 - Added `outDir: 'dist'` and `assetsDir: 'assets'` for clear build structure
-- Ensured proper build output
+- **NEW**: Implemented chunk splitting to reduce bundle size and eliminate warnings
+- **NEW**: Set `chunkSizeWarningLimit: 1600` to handle large dependencies
+- Optimized vendor chunks for better caching
 
-### 3. Improved Vercel Function Configuration
+### 3. Updated Dependencies
+- **Fixed**: Updated `multer` to resolve deprecation warning
+- **Fixed**: Updated `eslint` to latest version (v9.15.0)
+- Resolved deprecated package warnings
+
+### 4. Improved Vercel Function Configuration
 - Added explicit function timeout configuration
 - Enhanced route handling for better SPA support
 
@@ -97,6 +106,23 @@ After deployment, test these URLs:
 ### Static files not loading
 - **Cause**: Incorrect asset paths
 - **Solution**: The updated configuration fixes static file serving
+
+### Deprecation Warnings During Build
+- **"multer@1.4.5-lts.1 deprecated"**: Updated to latest LTS version
+- **"eslint@8.x deprecated"**: Updated to ESLint v9.15.0
+- **"inflight module deprecated"**: This is from npm's internal dependencies, safe to ignore
+- **"glob@7.x deprecated"**: Part of build tools, will be resolved in dependency updates
+- **"q library deprecated"**: Part of legacy dependencies, being phased out
+
+### Chunk Size Warnings
+- **"(!) Some chunks are larger than 500kb"**: 
+  - **Fixed**: Implemented vendor chunk splitting
+  - **Result**: Better caching and faster loading
+  - **Configuration**: Set warning limit to 1600kb for large dependencies like MUI
+
+### Vercel Build Settings Warning
+- **"Due to builds existing in configuration file"**: This is expected when using `vercel.json`
+- **Solution**: Keep the current configuration as it provides more control
 
 ## 🧪 Local Testing
 
