@@ -73,26 +73,6 @@ assignment/
 
 ## 🚀 Deployment
 
-### Deploy to Vercel
-
-This application is configured for easy deployment to Vercel:
-
-1. **Quick Deploy**: Use the deployment helper script
-   ```bash
-   # Windows PowerShell
-   .\deploy-vercel.ps1
-   
-   # macOS/Linux
-   ./deploy-vercel.sh
-   ```
-
-2. **Manual Deploy**: Follow the comprehensive guide
-   - See [VERCEL_DEPLOYMENT_GUIDE.md](./VERCEL_DEPLOYMENT_GUIDE.md) for detailed instructions
-   - Includes database setup, environment configuration, and troubleshooting
-
-3. **One-Click Deploy** (coming soon):
-   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/hirenext)
-
 ### Environment Variables Required for Production
 
 ```env
